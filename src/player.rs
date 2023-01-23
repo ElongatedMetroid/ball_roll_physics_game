@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::components::{MoveSpeed, Player};
+use crate::components::{MoveSpeed, Player, JumpHeight};
 
 pub struct PlayerPlugin;
 
@@ -33,23 +33,28 @@ fn setup(
         },
         Player,
         MoveSpeed(125.0),
+        JumpHeight(15.0),
         RigidBody::Dynamic,
         Collider::ball(10.0),
         GravityScale(0.5),
+        Velocity::default(),
     ));
 }
 
 fn move_player(
     time: Res<Time>,
     keyboard_input: Res<Input<KeyCode>>,
-    mut player_query: Query<(&mut Transform, &MoveSpeed), With<Player>>,
+    mut player_query: Query<(&mut Velocity, &JumpHeight, &MoveSpeed), With<Player>>,
 ) {
-    let (mut position, move_speed) = player_query.get_single_mut().unwrap();
+    let (mut velocity, jump_height, move_speed) = player_query.get_single_mut().unwrap();
 
     if keyboard_input.pressed(KeyCode::A) {
-        position.translation.x -= move_speed.0 * time.delta().as_secs_f32();
+        velocity.linvel.x -= move_speed.0 * time.delta().as_secs_f32();
     }
     if keyboard_input.pressed(KeyCode::D) {
-        position.translation.x += move_speed.0 * time.delta().as_secs_f32();
+        velocity.linvel.x += move_speed.0 * time.delta().as_secs_f32();
+    }
+    if keyboard_input.just_pressed(KeyCode::Space) {
+        velocity.linvel.y += jump_height.0;
     }
 }
