@@ -3,7 +3,7 @@ use platformer::{camera::PlayerCameraPlugin, player::PlayerPlugin};
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_plugin(PlayerPlugin)
         .add_plugin(PlayerCameraPlugin)
         .add_startup_system(setup)
