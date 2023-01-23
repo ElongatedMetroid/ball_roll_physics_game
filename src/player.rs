@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 
 use crate::components::{MoveSpeed, Player};
 
@@ -32,6 +33,9 @@ fn setup(
         },
         Player,
         MoveSpeed(125.0),
+        RigidBody::Dynamic,
+        Collider::ball(10.0),
+        GravityScale(0.5),
     ));
 }
 
