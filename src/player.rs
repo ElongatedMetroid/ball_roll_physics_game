@@ -31,20 +31,21 @@ fn setup(
             ..default()
         },
         Player,
-        MoveSpeed(5.0),
+        MoveSpeed(125.0),
     ));
 }
 
 fn move_player(
+    time: Res<Time>,
     keyboard_input: Res<Input<KeyCode>>,
     mut player_query: Query<(&mut Transform, &MoveSpeed), With<Player>>,
 ) {
     let (mut position, move_speed) = player_query.get_single_mut().unwrap();
 
     if keyboard_input.pressed(KeyCode::A) {
-        position.translation.x -= move_speed.0;
+        position.translation.x -= move_speed.0 * time.delta().as_secs_f32();
     }
     if keyboard_input.pressed(KeyCode::D) {
-        position.translation.x += move_speed.0;
+        position.translation.x += move_speed.0 * time.delta().as_secs_f32();
     }
 }
