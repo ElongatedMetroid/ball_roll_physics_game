@@ -1,5 +1,9 @@
 use bevy::prelude::*;
+use platformer::player::PlayerPlugin;
 
 fn main() {
-    println!("Hello, world!");
+    App::new()
+        .add_plugins(DefaultPlugins)
+        .add_plugin(PlayerPlugin)
+        .run();
 }
