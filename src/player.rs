@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::components::{MoveSpeed, Player, JumpHeight};
+use crate::components::{MoveSpeed, Player, Jump, Grounded};
 
 pub struct PlayerPlugin;
 
@@ -32,21 +32,22 @@ fn setup(
             ..default()
         },
         Player,
-        MoveSpeed(125.0),
-        JumpHeight(15.0),
+        MoveSpeed(200.0),
+        Jump { height: 500.0, amount: 1 },
         RigidBody::Dynamic,
         Collider::ball(10.0),
-        GravityScale(0.5),
+        GravityScale(5.0),
         Velocity::default(),
+        Grounded(false),
     ));
 }
 
 fn move_player(
     time: Res<Time>,
     keyboard_input: Res<Input<KeyCode>>,
-    mut player_query: Query<(&mut Velocity, &JumpHeight, &MoveSpeed), With<Player>>,
+    mut player_query: Query<(&mut Velocity, &mut Transform, &mut Grounded,&Jump, &MoveSpeed), With<Player>>,
 ) {
-    let (mut velocity, jump_height, move_speed) = player_query.get_single_mut().unwrap();
+    let (mut velocity, mut _position, mut grounded, jump, move_speed) = player_query.get_single_mut().unwrap();
 
     if keyboard_input.pressed(KeyCode::A) {
         velocity.linvel.x -= move_speed.0 * time.delta().as_secs_f32();
@@ -54,7 +55,8 @@ fn move_player(
     if keyboard_input.pressed(KeyCode::D) {
         velocity.linvel.x += move_speed.0 * time.delta().as_secs_f32();
     }
-    if keyboard_input.just_pressed(KeyCode::Space) {
-        velocity.linvel.y += jump_height.0;
+    if keyboard_input.just_pressed(KeyCode::Space) && grounded.0 {
+        velocity.linvel.y += jump.height;
+        grounded.0 = false;
     }
 }
