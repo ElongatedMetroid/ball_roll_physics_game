@@ -32,16 +32,18 @@ fn setup(
             ..default()
         },
         Player,
-        MoveSpeed(200.0),
+        MoveSpeed(300.0),
         Jump {
             height: 500.0,
             amount: 1,
+            directional_velocity_multiplier: 100.0,
         },
         RigidBody::Dynamic,
         Collider::ball(10.0),
         GravityScale(5.0),
         Velocity::default(),
         Grounded(false),
+        Damping { linear_damping: 0.2, angular_damping: 0.0 },
     ));
 }
 
@@ -68,8 +70,15 @@ fn move_player(
     if keyboard_input.pressed(KeyCode::D) {
         velocity.linvel.x += move_speed.0 * time.delta().as_secs_f32();
     }
-    if keyboard_input.just_pressed(KeyCode::Space) && grounded.0 {
+    if keyboard_input.pressed(KeyCode::Space) && grounded.0 {
         velocity.linvel.y += jump.height;
+
+        if velocity.linvel.x.is_sign_positive() && velocity.linvel.x != 0.0 {
+            velocity.linvel.x += (move_speed.0 * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
+        } else {
+            velocity.linvel.x -= (move_speed.0 * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
+        }
+
         grounded.0 = false;
     }
 }

@@ -10,6 +10,9 @@ pub struct MoveSpeed(pub f32);
 pub struct Jump {
     /// Height of jump
     pub height: f32,
+    /// Directional Velocity Multiplier, jumping while going a certain direction will boost your velocity in that direction
+    /// by MoveSpeed * directional_velocity_multiplier
+    pub directional_velocity_multiplier: f32,
     /// Amount of jumps that can be done without being grounded
     pub amount: usize,
 }
