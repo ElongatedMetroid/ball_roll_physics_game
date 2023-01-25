@@ -43,7 +43,10 @@ fn setup(
         GravityScale(5.0),
         Velocity::default(),
         Grounded(false),
-        Damping { linear_damping: 0.2, angular_damping: 0.0 },
+        Damping {
+            linear_damping: 0.2,
+            angular_damping: 0.0,
+        },
     ));
 }
 
@@ -63,20 +66,26 @@ fn move_player(
 ) {
     let (mut velocity, mut _position, mut grounded, jump, move_speed) =
         player_query.get_single_mut().unwrap();
+    let mut moving_right = false;
+    let mut moving_left = false;
 
     if keyboard_input.pressed(KeyCode::A) {
+        moving_left = true;
         velocity.linvel.x -= move_speed.0 * time.delta().as_secs_f32();
     }
     if keyboard_input.pressed(KeyCode::D) {
+        moving_right = true;
         velocity.linvel.x += move_speed.0 * time.delta().as_secs_f32();
     }
     if keyboard_input.pressed(KeyCode::Space) && grounded.0 {
         velocity.linvel.y += jump.height;
 
-        if velocity.linvel.x.is_sign_positive() && velocity.linvel.x != 0.0 {
-            velocity.linvel.x += (move_speed.0 * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
-        } else {
-            velocity.linvel.x -= (move_speed.0 * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
+        if moving_right {
+            velocity.linvel.x +=
+                (move_speed.0 * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
+        } else if moving_left {
+            velocity.linvel.x -=
+                (move_speed.0 * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
         }
 
         grounded.0 = false;
