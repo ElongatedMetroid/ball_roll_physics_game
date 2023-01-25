@@ -32,7 +32,10 @@ fn setup(
             ..default()
         },
         Player,
-        MoveSpeed(300.0),
+        MoveSpeed {
+            speed: 300.0,
+            break_angular_damping: 10.0,
+        },
         Jump {
             height: 500.0,
             amount: 1,
@@ -60,32 +63,49 @@ fn move_player(
             &mut Grounded,
             &Jump,
             &MoveSpeed,
+            &mut Damping,
         ),
         With<Player>,
     >,
 ) {
-    let (mut velocity, mut _position, mut grounded, jump, move_speed) =
+    let (mut velocity, mut _position, mut grounded, jump, move_speed, mut damping) =
         player_query.get_single_mut().unwrap();
     let mut moving_right = false;
     let mut moving_left = false;
 
-    if keyboard_input.pressed(KeyCode::A) {
-        moving_left = true;
-        velocity.linvel.x -= move_speed.0 * time.delta().as_secs_f32();
-    }
+
+    // Move right
     if keyboard_input.pressed(KeyCode::D) {
         moving_right = true;
-        velocity.linvel.x += move_speed.0 * time.delta().as_secs_f32();
+        velocity.linvel.x += move_speed.speed * time.delta().as_secs_f32();
     }
+    // Move left
+    if keyboard_input.pressed(KeyCode::A) {
+        moving_left = true;
+        velocity.linvel.x -= move_speed.speed * time.delta().as_secs_f32();
+    }
+    // Break
+    if keyboard_input.pressed(KeyCode::W) {
+        if keyboard_input.pressed(KeyCode::LShift) {
+            damping.linear_damping = move_speed.break_angular_damping;
+        } else {
+            damping.angular_damping = move_speed.break_angular_damping;
+        }
+    }
+    if keyboard_input.just_released(KeyCode::W) {
+        damping.angular_damping = 0.0;
+        damping.linear_damping = 0.2;
+    }
+    // Jump
     if keyboard_input.pressed(KeyCode::Space) && grounded.0 {
         velocity.linvel.y += jump.height;
 
         if moving_right {
             velocity.linvel.x +=
-                (move_speed.0 * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
+                (move_speed.speed * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
         } else if moving_left {
             velocity.linvel.x -=
-                (move_speed.0 * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
+                (move_speed.speed * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
         }
 
         grounded.0 = false;

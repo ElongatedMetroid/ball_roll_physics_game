@@ -4,7 +4,10 @@ use bevy::prelude::*;
 pub struct Player;
 
 #[derive(Component)]
-pub struct MoveSpeed(pub f32);
+pub struct MoveSpeed {
+    pub speed: f32,
+    pub break_angular_damping: f32,
+}
 
 #[derive(Component)]
 pub struct Jump {
