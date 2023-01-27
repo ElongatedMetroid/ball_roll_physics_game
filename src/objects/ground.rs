@@ -29,7 +29,7 @@ fn setup(mut commands: Commands) {
     ));
 
     let mut slope_transform = Transform::from_xyz(0.0, -300.0, 2.0);
-    slope_transform.rotate_z(500.0);
+    slope_transform.rotate_z(340.0);
     commands.spawn((
         SpriteBundle {
             sprite: Sprite {
@@ -42,6 +42,24 @@ fn setup(mut commands: Commands) {
         },
         RigidBody::Fixed,
         Collider::cuboid(100.0, 25.0),
+        Ground,
+        ActiveEvents::COLLISION_EVENTS,
+    ));
+
+    let mut slope_transform = Transform::from_xyz(1000.0, -300.0, 2.0);
+    slope_transform.rotate_z(500.0);
+    commands.spawn((
+        SpriteBundle {
+            sprite: Sprite {
+                color: Color::rgb(0.25, 100.0, 100.0),
+                custom_size: Some(Vec2::new(2000.0, 50.0)),
+                ..default()
+            },
+            transform: slope_transform,
+            ..default()
+        },
+        RigidBody::Fixed,
+        Collider::cuboid(1000.0, 25.0),
         Ground,
         ActiveEvents::COLLISION_EVENTS,
     ));

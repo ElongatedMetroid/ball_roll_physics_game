@@ -22,9 +22,11 @@ fn setup(
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     let mut player_transform = Transform::from_scale(Vec3::splat(6.0));
-    player_transform.translation.z += 500.0;
+    player_transform.translation.y -= 100.0;
+    player_transform.translation.z += 50.0;
 
     commands.spawn((
+        Name::from("Player"),
         SpriteSheetBundle {
             texture_atlas: texture_atlas_handle,
             sprite: TextureAtlasSprite::new(1),
@@ -34,7 +36,7 @@ fn setup(
         Player,
         MoveSpeed {
             speed: 300.0,
-            break_angular_damping: 10.0,
+            break_angular_damping: 100.0,
         },
         Jump {
             height: 500.0,
@@ -73,7 +75,6 @@ fn move_player(
     let mut moving_right = false;
     let mut moving_left = false;
 
-
     // Move right
     if keyboard_input.pressed(KeyCode::D) {
         moving_right = true;
@@ -96,16 +97,19 @@ fn move_player(
         damping.angular_damping = 0.0;
         damping.linear_damping = 0.2;
     }
+    if keyboard_input.just_released(KeyCode::LShift) {
+        damping.linear_damping = 0.2;
+    }
     // Jump
     if keyboard_input.pressed(KeyCode::Space) && grounded.0 {
         velocity.linvel.y += jump.height;
 
         if moving_right {
-            velocity.linvel.x +=
-                (move_speed.speed * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
+            velocity.linvel.x += (move_speed.speed * time.delta().as_secs_f32())
+                * jump.directional_velocity_multiplier;
         } else if moving_left {
-            velocity.linvel.x -=
-                (move_speed.speed * time.delta().as_secs_f32()) * jump.directional_velocity_multiplier;
+            velocity.linvel.x -= (move_speed.speed * time.delta().as_secs_f32())
+                * jump.directional_velocity_multiplier;
         }
 
         grounded.0 = false;

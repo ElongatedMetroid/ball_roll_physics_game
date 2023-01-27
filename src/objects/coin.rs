@@ -11,11 +11,9 @@ impl Plugin for CoinPlugin {
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let texture_handle = asset_server.load("ferris.png");
 
-    commands.spawn(
-        SpriteBundle {
-            transform: Transform::from_xyz(0.0, 0.0, 3.0),
-            texture: texture_handle,
-            ..default()
-        }
-    );
+    commands.spawn(SpriteBundle {
+        transform: Transform::from_xyz(0.0, 0.0, 3.0),
+        texture: texture_handle,
+        ..default()
+    });
 }
