@@ -1,10 +1,12 @@
-use bevy::prelude::*;
+use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier2d::{
     prelude::{NoUserData, RapierPhysicsPlugin},
     render::RapierDebugRenderPlugin,
 };
-use platformer::{camera::PlayerCameraPlugin, level::LevelPlugin, player::PlayerPlugin};
+use platformer::{
+    camera::PlayerCameraPlugin, level::LevelPlugin, player::PlayerPlugin, ui::debug::DebugUiPlugins,
+};
 
 fn main() {
     let mut app = App::new();
@@ -16,8 +18,10 @@ fn main() {
         .add_plugin(LevelPlugin);
 
     if cfg!(debug_assertions) {
-        app.add_plugin(WorldInspectorPlugin)
-            .add_plugin(RapierDebugRenderPlugin::default());
+        app.add_plugin(FrameTimeDiagnosticsPlugin::default())
+            .add_plugin(RapierDebugRenderPlugin::default())
+            .add_plugin(WorldInspectorPlugin)
+            .add_plugins(DebugUiPlugins);
     }
 
     app.run()

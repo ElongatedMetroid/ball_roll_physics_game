@@ -23,6 +23,10 @@ pub struct Jump {
 #[derive(Component)]
 pub struct Ground;
 
-#[derive(Component)]
 /// Holds a boolean containing whether the entity is grounded or not
+#[derive(Component)]
 pub struct Grounded(pub bool);
+
+/// Marker component to identify the FPS UI component
+#[derive(Component)]
+pub struct FpsText;
