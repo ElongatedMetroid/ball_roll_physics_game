@@ -9,13 +9,13 @@
 
 use bevy::prelude::*;
 
-use crate::objects::ObjectsPlugin;
+use crate::objects::ObjectPlugins;
 
 pub struct LevelPlugin;
 
 impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugin(ObjectsPlugin).add_startup_system(setup);
+        app.add_plugins(ObjectPlugins).add_startup_system(setup);
     }
 }
 

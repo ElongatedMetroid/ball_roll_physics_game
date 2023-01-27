@@ -1,14 +1,16 @@
 mod coin;
 mod ground;
 
-use bevy::prelude::*;
+use bevy::{app::PluginGroupBuilder, prelude::*};
 
 use self::{coin::CoinPlugin, ground::GroundPlugin};
 
-pub struct ObjectsPlugin;
+pub struct ObjectPlugins;
 
-impl Plugin for ObjectsPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_plugin(GroundPlugin).add_plugin(CoinPlugin);
+impl PluginGroup for ObjectPlugins {
+    fn build(self) -> bevy::app::PluginGroupBuilder {
+        PluginGroupBuilder::start::<Self>()
+            .add(GroundPlugin)
+            .add(CoinPlugin)
     }
 }
