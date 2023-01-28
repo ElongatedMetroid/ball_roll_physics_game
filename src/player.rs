@@ -22,6 +22,7 @@ fn setup(
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     let mut player_transform = Transform::from_scale(Vec3::splat(6.0));
+    player_transform.translation.x -= 200.0;
     player_transform.translation.y -= 100.0;
     player_transform.translation.z += 50.0;
 

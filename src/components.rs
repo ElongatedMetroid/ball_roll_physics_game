@@ -20,6 +20,7 @@ pub struct Jump {
     pub amount: usize,
 }
 
+/// Marker component to identify the Ground components
 #[derive(Component)]
 pub struct Ground;
 
@@ -30,3 +31,10 @@ pub struct Grounded(pub bool);
 /// Marker component to identify the FPS UI component
 #[derive(Component)]
 pub struct FpsText;
+
+#[derive(Component)]
+pub struct CoinText;
+
+/// Coin component with the value of the coin
+#[derive(Component)]
+pub struct Coin(pub isize);

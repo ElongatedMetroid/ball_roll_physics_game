@@ -5,7 +5,10 @@ use bevy_rapier2d::{
     render::RapierDebugRenderPlugin,
 };
 use platformer::{
-    camera::PlayerCameraPlugin, level::LevelPlugin, player::PlayerPlugin, ui::debug::DebugUiPlugins,
+    camera::PlayerCameraPlugin,
+    level::LevelPlugin,
+    player::PlayerPlugin,
+    ui::{debug::DebugUiPlugins, GameUiPlugins},
 };
 
 fn main() {
@@ -15,7 +18,8 @@ fn main() {
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(PlayerPlugin)
         .add_plugin(PlayerCameraPlugin)
-        .add_plugin(LevelPlugin);
+        .add_plugin(LevelPlugin)
+        .add_plugins(GameUiPlugins);
 
     if cfg!(debug_assertions) {
         app.add_plugin(FrameTimeDiagnosticsPlugin::default())
