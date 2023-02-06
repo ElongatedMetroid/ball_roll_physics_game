@@ -43,7 +43,10 @@ fn check_collected(
         if let Some(contact_pair) = rapier_context.contact_pair(coin_entity, player_entity) {
             if contact_pair.has_any_active_contacts() {
                 // Add coin value to coin counter
-                let current_coins = coin_text.sections[1].value.parse::<isize>().unwrap_or_default();
+                let current_coins = coin_text.sections[1]
+                    .value
+                    .parse::<isize>()
+                    .unwrap_or_default();
                 coin_text.sections[1].value = format!("{}", current_coins + coin.0);
 
                 // Despawn coin

@@ -21,11 +21,14 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                     color: Color::WHITE,
                 },
             ),
-            TextSection::from_style(TextStyle {
-                font: asset_server.load("vivaldi.ttf"),
-                font_size: 60.0,
-                color: Color::GOLD,
-            }),
+            TextSection::new(
+                "0",
+                TextStyle {
+                    font: asset_server.load("vivaldi.ttf"),
+                    font_size: 60.0,
+                    color: Color::GOLD,
+                },
+            ),
         ]),
         CoinText,
     ));

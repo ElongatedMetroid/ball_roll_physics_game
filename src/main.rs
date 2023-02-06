@@ -14,12 +14,21 @@ use platformer::{
 fn main() {
     let mut app = App::new();
 
-    app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
-        .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-        .add_plugin(PlayerPlugin)
-        .add_plugin(PlayerCameraPlugin)
-        .add_plugin(LevelPlugin)
-        .add_plugins(GameUiPlugins);
+    app.add_plugins(
+        DefaultPlugins
+            .set(AssetPlugin {
+                // This tells the AssetServer to watch for changes to assets.
+                // It enables our scenes to automatically reload in game when we modify their files.
+                watch_for_changes: true,
+                ..default()
+            })
+            .set(ImagePlugin::default_nearest())
+    )
+    .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+    .add_plugin(PlayerPlugin)
+    .add_plugin(PlayerCameraPlugin)
+    .add_plugin(LevelPlugin)
+    .add_plugins(GameUiPlugins);
 
     if cfg!(debug_assertions) {
         app.add_plugin(FrameTimeDiagnosticsPlugin::default())
